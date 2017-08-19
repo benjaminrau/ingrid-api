@@ -419,6 +419,9 @@ class Product
         return $this->id;
     }
 
+    /**
+     * @return int
+     */
     public function getZa()
     {
         if (!empty(array_filter($this->getPackaginglabel(), function ($packaginglabel) {
