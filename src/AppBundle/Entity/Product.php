@@ -3,12 +3,24 @@
 namespace AppBundle\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Product
  *
- * @ApiResource
+ * @ApiResource(
+ *     attributes={
+ *      "filters"={
+ *         "product.gtin_search"
+ *      }
+ *     "normalization_context"={
+ *         "groups"={
+ *             "api_out"
+ *         }
+ *     },
+ *     }
+ * )
  * @ORM\Entity
  */
 class Product
@@ -17,6 +29,7 @@ class Product
      * @var integer
      *
      * @ORM\Column(name="gtin", type="bigint", nullable=false)
+     * @Groups({"api_out"})
      */
     private $gtin;
 
@@ -24,6 +37,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     * @Groups({"api_out"})
      */
     private $name;
 
@@ -31,6 +45,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="description", type="text", length=16777215, nullable=false)
+     * @Groups({"api_out"})
      */
     private $description;
 
@@ -38,6 +53,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="brandname", type="string", length=255, nullable=false)
+     * @Groups({"api_out"})
      */
     private $brandname;
 
@@ -45,6 +61,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="brandowner", type="string", length=255, nullable=false)
+     * @Groups({"api_out"})
      */
     private $brandowner;
 
@@ -52,6 +69,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="country", type="string", length=255, nullable=false)
+     * @Groups({"api_out"})
      */
     private $country;
 
@@ -59,6 +77,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="category", type="string", length=255, nullable=false)
+     * @Groups({"api_out"})
      */
     private $category;
 
@@ -66,6 +85,7 @@ class Product
      * @var integer
      *
      * @ORM\Column(name="categorycode", type="integer", nullable=false)
+     * @Groups({"api_out"})
      */
     private $categorycode;
 
@@ -73,6 +93,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="image", type="string", length=255, nullable=false)
+     * @Groups({"api_out"})
      */
     private $image;
 
@@ -80,6 +101,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="ingredients", type="text", length=16777215, nullable=false)
+     * @Groups({"api_out"})
      */
     private $ingredients;
 
@@ -87,6 +109,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="nutrient", type="text", length=16777215, nullable=false)
+     * @Groups({"api_out"})
      */
     private $nutrient;
 
@@ -94,6 +117,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="allergen", type="text", length=16777215, nullable=false)
+     * @Groups({"api_out"})
      */
     private $allergen;
 
@@ -101,6 +125,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="allergentype", type="text", length=16777215, nullable=false)
+     * @Groups({"api_out"})
      */
     private $allergentype;
 
@@ -108,6 +133,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="certification", type="text", length=16777215, nullable=false)
+     * @Groups({"api_out"})
      */
     private $certification;
 
@@ -115,6 +141,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="additiveinformation", type="text", length=16777215, nullable=false)
+     * @Groups({"api_out"})
      */
     private $additiveinformation;
 
@@ -122,6 +149,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="diettypeinformation", type="text", length=16777215, nullable=false)
+     * @Groups({"api_out"})
      */
     private $diettypeinformation;
 
@@ -129,6 +157,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="packaginglabel", type="text", length=16777215, nullable=false)
+     * @Groups({"api_out"})
      */
     private $packaginglabel;
 
