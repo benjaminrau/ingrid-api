@@ -19,3 +19,6 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
 
     cors_allow_origin: http://localhost
+
+    api_name: 'Ingrid API'
+    api_description: 'Ingrid provides allergen information for products.'
