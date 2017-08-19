@@ -11,14 +11,14 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ApiResource(
  *     attributes={
- *      "filters"={
- *         "product.gtin_search"
- *      }
- *     "normalization_context"={
- *         "groups"={
- *             "api_out"
+ *         "filters"={
+ *             "product.gtin_search"
+ *         },
+ *         "normalization_context"={
+ *             "groups"={
+ *                 "api_out"
+ *             }
  *         }
- *     },
  *     }
  * )
  * @ORM\Entity
