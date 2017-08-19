@@ -90,4 +90,4 @@ api_platform:
     collection:
       pagination:
         client_items_per_page: true
-        items_per_page: 99999
+        items_per_page: 1000
