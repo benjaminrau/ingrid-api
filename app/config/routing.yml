@@ -1,5 +1,6 @@
 api:
     resource: '.'
+    prefix: '/api'
     type:     'api_platform'
 
 app:

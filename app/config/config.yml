@@ -79,3 +79,15 @@ nelmio_cors:
         max_age:        3600
     paths:
         '^/': ~
+
+dunglas_action:
+    directories: # List of directories relative to the kernel root directory containing classes to auto-register.
+        - '../src/*Bundle/{Controller,Action,Command,EventSubscriber}'
+
+api_platform:
+    title:                  %api_name%
+    description:            %api_description%
+    collection:
+      pagination:
+        client_items_per_page: true
+        items_per_page: 99999
