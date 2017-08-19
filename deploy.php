@@ -17,9 +17,9 @@ set('writable_use_sudo', true);
 host('beta')
     ->hostname('benjaminrau.com')
     ->port(22)
-    ->user('root')
+    ->user('ingrid')
     ->forwardAgent()
-    ->stage('live')
+    ->stage('beta')
     ->set('deploy_path', '/var/www/ingrid-api')
     ->set('db_settings_storage_path', '/var/www/ingrid-api/shared/.deploy/database/.dumps')
     ->set('env', 'prod')
@@ -33,7 +33,7 @@ host('beta')
         array_merge(
             get('db_databases')
         ))
-    ->set('branch', 'live');
+    ->set('branch', 'master');
 
 localhost()
     ->stage('local')
@@ -44,6 +44,10 @@ localhost()
             get('db_databases')
         ));
 
-after('deploy:failed', 'deploy:unlock');
+task('restart:apache2', function () {
+    run('sudo /etc/init.d/apache2 restart');
+});
 
-before('deploy:symlink', 'database:migrate');
+after('deploy', 'restart:apache2');
+
+after('deploy:failed', 'deploy:unlock');
