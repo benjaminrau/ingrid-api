@@ -1,10 +1,5 @@
-# Learn more about services, parameters and containers at
-# http://symfony.com/doc/current/book/service_container.html
-parameters:
-#    parameter_name: value
-
 services:
     product.gtin_search_filter:
         parent:    'api_platform.doctrine.orm.search_filter'
-        arguments: [ { gtin: 'end' } ]
+        arguments: [ { gtin: 'exact' } ]
         tags:      [ { name: 'api_platform.filter', id: 'product.gtin_search' } ]

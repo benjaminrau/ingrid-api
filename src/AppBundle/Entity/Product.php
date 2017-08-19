@@ -10,6 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
  * Product
  *
  * @ApiResource(
+ *     collectionOperations={
+ *         "get"={"method"="GET"}
+ *     },
+ *     itemOperations={
+ *         "get"={"method"="GET"}
+ *     },
  *     attributes={
  *         "filters"={
  *             "product.gtin_search"
@@ -25,6 +31,30 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Product
 {
+    const ZA_UNDEFINED = 0;
+    const ZA_VEGAN = 1;
+    const ZA_PROBABLY_VEGAN = 2;
+    const ZA_VEGETARIAN = 3;
+    const ZA_PROBABLY_VEGETARIAN = 4;
+
+    const PACKAGINGLABELS_VEGAN = [
+        "VEGAN_SOCIETY_VEGAN_LOGO",
+    ];
+
+    const DIETTYPEINFORMATIONS_VEGAN = [
+        "VEGAN",
+    ];
+
+    const DIETTYPEINFORMATIONS_VEGETARIAN = [
+        "VEGETARIAN",
+    ];
+
+    const ALLERGENTYPECODES_VEGETARIAN = [
+        "AM",
+        "AC",
+        "ML",
+    ];
+
     /**
      * @var integer
      *
@@ -101,62 +131,68 @@ class Product
      * @var string
      *
      * @ORM\Column(name="ingredients", type="text", length=16777215, nullable=false)
-     * @Groups({"api_out"})
      */
     private $ingredients;
 
     /**
-     * @var string
+     * @var array
      *
-     * @ORM\Column(name="nutrient", type="text", length=16777215, nullable=false)
+     * @Groups({"api_out"})
+     */
+    private $ingredientsList;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="nutrient", type="json_array", length=16777215, nullable=false)
      * @Groups({"api_out"})
      */
     private $nutrient;
 
     /**
-     * @var string
+     * @var array
      *
-     * @ORM\Column(name="allergen", type="text", length=16777215, nullable=false)
+     * @ORM\Column(name="allergen", type="json_array", length=16777215, nullable=false)
      * @Groups({"api_out"})
      */
     private $allergen;
 
     /**
-     * @var string
+     * @var array
      *
-     * @ORM\Column(name="allergentype", type="text", length=16777215, nullable=false)
+     * @ORM\Column(name="allergentype", type="json_array", length=16777215, nullable=false)
      * @Groups({"api_out"})
      */
     private $allergentype;
 
     /**
-     * @var string
+     * @var array
      *
-     * @ORM\Column(name="certification", type="text", length=16777215, nullable=false)
+     * @ORM\Column(name="certification", type="json_array", length=16777215, nullable=false)
      * @Groups({"api_out"})
      */
     private $certification;
 
     /**
-     * @var string
+     * @var array
      *
-     * @ORM\Column(name="additiveinformation", type="text", length=16777215, nullable=false)
+     * @ORM\Column(name="additiveinformation", type="json_array", length=16777215, nullable=false)
      * @Groups({"api_out"})
      */
     private $additiveinformation;
 
     /**
-     * @var string
+     * @var array
      *
-     * @ORM\Column(name="diettypeinformation", type="text", length=16777215, nullable=false)
+     * @ORM\Column(name="diettypeinformation", type="json_array", length=16777215, nullable=false)
      * @Groups({"api_out"})
      */
     private $diettypeinformation;
 
     /**
-     * @var string
+     * @var array
      *
-     * @ORM\Column(name="packaginglabel", type="text", length=16777215, nullable=false)
+     * @ORM\Column(name="packaginglabel", type="json_array", length=16777215, nullable=false)
      * @Groups({"api_out"})
      */
     private $packaginglabel;
@@ -197,6 +233,14 @@ class Product
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    /**
+     * Defines vegetarian / vegan type
+     *
+     * @var int
+     * @Groups({"api_out"})
+     */
+    private $za = self::ZA_UNDEFINED;
 
     /**
      * @return int
@@ -271,15 +315,16 @@ class Product
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getIngredients()
+    public function getIngredientsList()
     {
-        return $this->ingredients;
+        $ingredients = str_replace(array('Zutaten:', "\n"), '', $this->ingredients);
+        return array_map('trim', explode(', ', $ingredients));
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getNutrient()
     {
@@ -287,7 +332,7 @@ class Product
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getAllergen()
     {
@@ -295,7 +340,7 @@ class Product
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getAllergentype()
     {
@@ -303,7 +348,7 @@ class Product
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getCertification()
     {
@@ -311,7 +356,7 @@ class Product
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getAdditiveinformation()
     {
@@ -319,7 +364,7 @@ class Product
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getDiettypeinformation()
     {
@@ -327,7 +372,7 @@ class Product
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getPackaginglabel()
     {
@@ -372,5 +417,48 @@ class Product
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getZa()
+    {
+        if (!empty(array_filter($this->getPackaginglabel(), function ($packaginglabel) {
+            return in_array($packaginglabel, self::PACKAGINGLABELS_VEGAN);
+        }))) {
+            return self::ZA_VEGAN;
+        }
+
+        if (!empty($this->getDiettypeinformation()) && !empty($this->getDiettypeinformation()['dietTypeInformation'])) {
+            if (!empty(array_filter($this->getDiettypeinformation()['dietTypeInformation'],
+                function ($dietTypeInformation) {
+                    return in_array($dietTypeInformation, self::DIETTYPEINFORMATIONS_VEGAN);
+                }))
+            ) {
+                return self::ZA_VEGAN;
+            }
+
+            if (!empty(array_filter($this->getDiettypeinformation()['dietTypeInformation'],
+                function ($dietTypeInformation) {
+                    return in_array($dietTypeInformation, self::DIETTYPEINFORMATIONS_VEGETARIAN);
+                }))
+            ) {
+                return self::ZA_VEGETARIAN;
+            }
+        }
+
+        if (stripos($this->getName(), 'vegan') !== false || stripos($this->getDescription(), 'vegan') !== false) {
+            return self::ZA_PROBABLY_VEGAN;
+        }
+
+        if (!empty($this->getAllergen()) && !empty($this->getAllergen()['allergen'])) {
+            if (!empty(array_filter($this->getAllergen()['allergen'],
+                function ($allergen) {
+                    return !empty($allergen['allergenTypeCode']) && in_array($allergen['allergenTypeCode'], self::ALLERGENTYPECODES_VEGETARIAN);
+                }))
+            ) {
+                return self::ZA_PROBABLY_VEGETARIAN;
+            }
+        }
+
+        return self::ZA_UNDEFINED;
     }
 }
