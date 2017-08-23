@@ -253,7 +253,7 @@ class Product
      * @var int
      * @Groups({"api_out_product", "api_out_incompatibleness"})
      */
-    private $za = self::ZA_UNDEFINED;
+    private $vegan = self::ZA_UNDEFINED;
 
     /**
      * @return int
@@ -443,7 +443,7 @@ class Product
     /**
      * @return int
      */
-    public function getZa()
+    public function getVegan()
     {
         if (!empty(array_filter($this->getPackaginglabel(), function ($packaginglabel) {
             return in_array($packaginglabel, self::PACKAGINGLABELS_VEGAN);
