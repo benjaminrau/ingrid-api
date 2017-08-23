@@ -82,7 +82,7 @@ nelmio_cors:
 
 dunglas_action:
     directories: # List of directories relative to the kernel root directory containing classes to auto-register.
-        - '../src/*Bundle/{Controller,Action,Command,EventSubscriber}'
+        - '../src/*Bundle/{Controller,Action,Command,EventSubscriber,Filter}'
 
 api_platform:
     title:                  %api_name%

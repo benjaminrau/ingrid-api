@@ -1,0 +1,10 @@
+services:
+    product.gtin_search_filter:
+        parent:    'api_platform.doctrine.orm.search_filter'
+        arguments: [ { gtin: 'exact' } ]
+        tags:      [ { name: 'api_platform.filter', id: 'product.gtin_search' } ]
+
+    product.fulltext_search_filter:
+             class: 'AppBundle\Filter\FulltextSearchFilter'
+             autowire: true
+             tags: [ { name: 'api_platform.filter', id: 'product.fulltext_search' } ]

@@ -11,18 +11,38 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ApiResource(
  *     collectionOperations={
- *         "get"={"method"="GET"}
+ *         "product"={
+ *             "method"="GET",
+ *             "path"="/products",
+ *             "normalization_context"={
+ *                 "groups"={
+ *                     "api_out_default",
+ *                     "api_out_product"
+ *                 }
+ *             }
+ *         },
+ *         "incompatibleness"={
+ *             "method"="GET",
+ *             "path"="/incompatibilinesses",
+ *             "normalization_context"={
+ *                 "groups"={
+ *                     "api_out_default",
+ *                     "api_out_incompatibleness"
+ *                 }
+ *             }
+ *         }
  *     },
  *     itemOperations={
  *         "get"={"method"="GET"}
  *     },
  *     attributes={
  *         "filters"={
- *             "product.gtin_search"
+ *             "product.gtin_search",
+ *             "product.fulltext_search"
  *         },
  *         "normalization_context"={
  *             "groups"={
- *                 "api_out"
+ *                 "api_out_default"
  *             }
  *         }
  *     }
@@ -59,7 +79,7 @@ class Product
      * @var integer
      *
      * @ORM\Column(name="gtin", type="bigint", nullable=false)
-     * @Groups({"api_out"})
+     * @Groups({"api_out_default", "api_out_product"})
      */
     private $gtin;
 
@@ -67,7 +87,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
-     * @Groups({"api_out"})
+     * @Groups({"api_out_product"})
      */
     private $name;
 
@@ -75,7 +95,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="description", type="text", length=16777215, nullable=false)
-     * @Groups({"api_out"})
+     * @Groups({"api_out_product"})
      */
     private $description;
 
@@ -83,7 +103,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="brandname", type="string", length=255, nullable=false)
-     * @Groups({"api_out"})
+     * @Groups({"api_out_product"})
      */
     private $brandname;
 
@@ -91,7 +111,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="brandowner", type="string", length=255, nullable=false)
-     * @Groups({"api_out"})
+     * @Groups({"api_out_product"})
      */
     private $brandowner;
 
@@ -99,7 +119,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="country", type="string", length=255, nullable=false)
-     * @Groups({"api_out"})
+     * @Groups({"api_out_product"})
      */
     private $country;
 
@@ -107,7 +127,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="category", type="string", length=255, nullable=false)
-     * @Groups({"api_out"})
+     * @Groups({"api_out_product"})
      */
     private $category;
 
@@ -115,7 +135,6 @@ class Product
      * @var integer
      *
      * @ORM\Column(name="categorycode", type="integer", nullable=false)
-     * @Groups({"api_out"})
      */
     private $categorycode;
 
@@ -123,7 +142,6 @@ class Product
      * @var string
      *
      * @ORM\Column(name="image", type="string", length=255, nullable=false)
-     * @Groups({"api_out"})
      */
     private $image;
 
@@ -131,13 +149,12 @@ class Product
      * @var string
      *
      * @ORM\Column(name="ingredients", type="text", length=16777215, nullable=false)
+     * @Groups({"api_out_product"})
      */
     private $ingredients;
 
     /**
      * @var array
-     *
-     * @Groups({"api_out"})
      */
     private $ingredientsList;
 
@@ -145,7 +162,6 @@ class Product
      * @var array
      *
      * @ORM\Column(name="nutrient", type="json_array", length=16777215, nullable=false)
-     * @Groups({"api_out"})
      */
     private $nutrient;
 
@@ -153,7 +169,6 @@ class Product
      * @var array
      *
      * @ORM\Column(name="allergen", type="json_array", length=16777215, nullable=false)
-     * @Groups({"api_out"})
      */
     private $allergen;
 
@@ -161,7 +176,6 @@ class Product
      * @var array
      *
      * @ORM\Column(name="allergentype", type="json_array", length=16777215, nullable=false)
-     * @Groups({"api_out"})
      */
     private $allergentype;
 
@@ -169,7 +183,6 @@ class Product
      * @var array
      *
      * @ORM\Column(name="certification", type="json_array", length=16777215, nullable=false)
-     * @Groups({"api_out"})
      */
     private $certification;
 
@@ -177,7 +190,6 @@ class Product
      * @var array
      *
      * @ORM\Column(name="additiveinformation", type="json_array", length=16777215, nullable=false)
-     * @Groups({"api_out"})
      */
     private $additiveinformation;
 
@@ -185,7 +197,6 @@ class Product
      * @var array
      *
      * @ORM\Column(name="diettypeinformation", type="json_array", length=16777215, nullable=false)
-     * @Groups({"api_out"})
      */
     private $diettypeinformation;
 
@@ -193,7 +204,6 @@ class Product
      * @var array
      *
      * @ORM\Column(name="packaginglabel", type="json_array", length=16777215, nullable=false)
-     * @Groups({"api_out"})
      */
     private $packaginglabel;
 
@@ -238,7 +248,7 @@ class Product
      * Defines vegetarian / vegan type
      *
      * @var int
-     * @Groups({"api_out"})
+     * @Groups({"api_out_product", "api_out_incompatibleness"})
      */
     private $za = self::ZA_UNDEFINED;
 
@@ -312,6 +322,14 @@ class Product
     public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIngredients()
+    {
+        return $this->ingredients;
     }
 
     /**
