@@ -19,6 +19,10 @@ use Doctrine\ORM\Mapping as ORM;
  *                     "api_out_default",
  *                     "api_out_product"
  *                 }
+ *             },
+ *             "filters"={
+ *                 "product.gtin_search",
+ *                 "product.fulltext_search"
  *             }
  *         },
  *         "incompatibleness"={
@@ -38,7 +42,6 @@ use Doctrine\ORM\Mapping as ORM;
  *     attributes={
  *         "filters"={
  *             "product.gtin_search",
- *             "product.fulltext_search"
  *         },
  *         "normalization_context"={
  *             "groups"={
