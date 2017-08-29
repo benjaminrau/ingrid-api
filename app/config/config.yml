@@ -91,3 +91,9 @@ api_platform:
       pagination:
         client_items_per_page: true
         items_per_page: 1000
+
+ma27_api_key_authentication:
+    user:
+        object_manager: "doctrine.orm.default_entity_manager"
+        password:
+            strategy: php55

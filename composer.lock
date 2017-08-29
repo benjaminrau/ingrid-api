@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "61d2f23fba40307b1583da4f30293480",
-    "content-hash": "5b8666d2964b1057c91844c4836099ff",
+    "hash": "31e5cb240f4bff38edc6219563c0dd0b",
+    "content-hash": "c62aad6e5e0946816de50a9ab0c05414",
     "packages": [
         {
             "name": "api-platform/core",
@@ -1142,6 +1142,50 @@
             "time": "2016-09-29 06:34:48"
         },
         {
+            "name": "hautelook/phpass",
+            "version": "0.3.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hautelook/phpass.git",
+                "reference": "b4cbd9b67ed3ef5672ec79d8e0c46d24bd844abd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hautelook/phpass/zipball/b4cbd9b67ed3ef5672ec79d8e0c46d24bd844abd",
+                "reference": "b4cbd9b67ed3ef5672ec79d8e0c46d24bd844abd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Hautelook": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Public Domain"
+            ],
+            "authors": [
+                {
+                    "name": "Solar Designer",
+                    "email": "solar@openwall.com",
+                    "homepage": "http://openwall.com/phpass/"
+                }
+            ],
+            "description": "Portable PHP password hashing framework",
+            "homepage": "http://github.com/hautelook/phpass/",
+            "keywords": [
+                "blowfish",
+                "crypt",
+                "password",
+                "security"
+            ],
+            "time": "2012-08-31 00:00:00"
+        },
+        {
             "name": "incenteev/composer-parameter-handler",
             "version": "v2.1.2",
             "source": {
@@ -1241,6 +1285,65 @@
                 "sql"
             ],
             "time": "2014-01-12 16:20:24"
+        },
+        {
+            "name": "ma27/api-key-authentication-bundle",
+            "version": "v1.2.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Ma27/Ma27ApiKeyAuthenticationBundle.git",
+                "reference": "33e4bfee17efff8d79dbb358002f0e91ba6b5a05"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Ma27/Ma27ApiKeyAuthenticationBundle/zipball/33e4bfee17efff8d79dbb358002f0e91ba6b5a05",
+                "reference": "33e4bfee17efff8d79dbb358002f0e91ba6b5a05",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/collections": "~1.3",
+                "doctrine/common": "~2.5",
+                "hautelook/phpass": "~0.3",
+                "php": ">=5.3.9",
+                "psr/log": "~1.0",
+                "symfony/symfony": "~2.8|~3.0"
+            },
+            "require-dev": {
+                "doctrine/doctrine-bundle": "~1.3",
+                "doctrine/orm": "~2.4",
+                "phpunit/php-code-coverage": "~2.2",
+                "phpunit/phpunit": "~4.8"
+            },
+            "suggest": {
+                "doctrine/couchdb-odm": "When storing users in a couchdb database",
+                "doctrine/mongodb-odm": "When storing users in a mongodb database",
+                "doctrine/orm": "When storing the users in an SQL database",
+                "monolog/monolog": "When logging the apikey purger"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Ma27\\ApiKeyAuthenticationBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Maximilian Bosch",
+                    "email": "maximilian.bosch.27@gmail.com"
+                }
+            ],
+            "description": "A bundle that provides the possibility to generate api keys for rest apis",
+            "keywords": [
+                "Api Key",
+                "Authentication",
+                "Symfony Bundle",
+                "security"
+            ],
+            "time": "2016-10-03 07:36:01"
         },
         {
             "name": "monolog/monolog",
@@ -3827,7 +3930,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "ma27/api-key-authentication-bundle": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

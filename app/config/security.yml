@@ -7,11 +7,23 @@ security:
         in_memory:
             memory: ~
 
+    role_hierarchy:
+        ROLE_INGRID_APPUSER:   ROLE_INGRID_API
+        ROLE_INGRID_AGENCY:    ROLE_INGRID_API
+        ROLE_INGRID_API:       ROLE_USER
+        ROLE_USER:             ROLE_DEFAULT
+
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        api:
+            pattern: "^/api/"
+            stateless: true
+            simple_preauth:
+                 authenticator: ma27_api_key_authentication.security.authenticator
 
         main:
             anonymous: ~

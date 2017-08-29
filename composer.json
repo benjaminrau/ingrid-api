@@ -35,7 +35,8 @@
         "phpdocumentor/reflection-docblock": "^3.0",
         "deployer/deployer": "^5.1",
         "sourcebroker/deployer-extended": "^6.0",
-        "sourcebroker/deployer-extended-database": "^4.0"
+        "sourcebroker/deployer-extended-database": "^4.0",
+        "ma27/api-key-authentication-bundle": "@dev"
     },
     "require-dev": {
         "api-platform/schema-generator": "^1.2",

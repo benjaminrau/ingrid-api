@@ -5,6 +5,19 @@ services:
         tags:      [ { name: 'api_platform.filter', id: 'product.gtin_search' } ]
 
     product.fulltext_search_filter:
-             class: 'AppBundle\Filter\FulltextSearchFilter'
-             autowire: true
-             tags: [ { name: 'api_platform.filter', id: 'product.fulltext_search' } ]
+         class: 'AppBundle\Filter\FulltextSearchFilter'
+         autowire: true
+         tags: [ { name: 'api_platform.filter', id: 'product.fulltext_search' } ]
+
+    security.collection_operation_voter:
+        class:      'AppBundle\Security\CollectionOperationVoter'
+        arguments:  ['@security.token_storage']
+        tags:
+            -  { name: 'api_platform.collection_data_provider', priority: 12 }
+
+    security.generic_entity_voter:
+        class:      AppBundle\Security\GenericEntityVoter
+        public:     false
+        arguments:  ['@security.access.decision_manager']
+        tags:
+            - { name: security.voter }

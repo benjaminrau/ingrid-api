@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
+use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ApiResource(
  *     collectionOperations={
- *         "product"={
+ *         Product::OPERATION_NAME_PRODUCT_COLLECTION={
  *             "method"="GET",
  *             "path"="/products",
  *             "normalization_context"={
@@ -25,9 +27,9 @@ use Doctrine\ORM\Mapping as ORM;
  *                 "product.fulltext_search"
  *             }
  *         },
- *         "incompatibleness"={
+ *         Product::OPERATION_NAME_INCOMPATIBLENESS_COLLECTION={
  *             "method"="GET",
- *             "path"="/incompatibilinesses",
+ *             "path"="/incompatibleness",
  *             "normalization_context"={
  *                 "groups"={
  *                     "api_out_default",
@@ -51,9 +53,13 @@ use Doctrine\ORM\Mapping as ORM;
  *     }
  * )
  * @ORM\Entity
+ * @ORM\Table(name="products", uniqueConstraints={@ORM\UniqueConstraint(name="gtin", columns={"gtin"})})
  */
 class Product
 {
+    const OPERATION_NAME_PRODUCT_COLLECTION = "product";
+    const OPERATION_NAME_INCOMPATIBLENESS_COLLECTION = "incompatibleness";
+
     const ZA_UNDEFINED = 0;
     const ZA_VEGAN = 1;
     const ZA_PROBABLY_VEGAN = 2;
@@ -484,5 +490,27 @@ class Product
         }
 
         return self::ZA_UNDEFINED;
+    }
+
+    /**
+     * @param PreAuthenticatedToken $token
+     * @param string $operationName
+     * @return boolean
+     */
+    public static function canUserViewCollection(PreAuthenticatedToken $token, $operationName)
+    {
+        if ($operationName === self::OPERATION_NAME_INCOMPATIBLENESS_COLLECTION && (boolean) count(array_filter($token->getRoles(), function(Role $role) {
+               return $role->getRole() === User::ROLE_INGRID_API;
+            }))) {
+            return true;
+        }
+
+        if ($operationName === self::OPERATION_NAME_PRODUCT_COLLECTION && (boolean) count(array_filter($token->getRoles(), function(Role $role) {
+                return $role->getRole() === User::ROLE_INGRID_APPUSER;
+            }))) {
+            return true;
+        }
+
+        return false;
     }
 }

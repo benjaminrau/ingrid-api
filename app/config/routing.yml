@@ -1,3 +1,6 @@
+ma27_api_key_authentication:
+    resource: "@Ma27ApiKeyAuthenticationBundle/Resources/config/routing/routing.yml"
+
 api:
     resource: '.'
     prefix: '/api'
