@@ -97,3 +97,9 @@ ma27_api_key_authentication:
         object_manager: "doctrine.orm.default_entity_manager"
         password:
             strategy: php55
+
+app:
+    api_public_path: "%api_public_path%"
+    registration_secrets:
+        - { secret: "eabe945c-d317-4fdf-80cb-c287c0dc5af8", roles: ["ROLE_INGRID_APPUSER", "ROLE_INGRID_API"] }
+        - { secret: "d8c0a51b-4de2-4e57-bc46-a283145421f8", roles: ["ROLE_INGRID_AGENCY", "ROLE_INGRID_API"] }

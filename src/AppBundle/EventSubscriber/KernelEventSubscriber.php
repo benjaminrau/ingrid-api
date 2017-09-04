@@ -72,31 +72,33 @@ final class KernelEventSubscriber implements EventSubscriberInterface
 			return true;
 		}
 
-		if (!$this->tokenStorage->getToken()) {
+		if (!$this->tokenStorage->getToken() && 0 !== strpos($event->getRequest()->getPathInfo(), "/api/" . $this->container->getParameter("app.api_public_path"))) {
 			throw new AccessDeniedException("The api doesnt support unauthorized requests.");
 		}
 
-        if (Request::METHOD_GET === $method) {
-            if (false === $this->authorizationChecker->isGranted('API_VIEW', $subject)) {
-                throw new AccessDeniedException("Access denied for API_VIEW on: " . get_class($subject));
+		if ($this->tokenStorage->getToken()) {
+            if (Request::METHOD_GET === $method) {
+                if (false === $this->authorizationChecker->isGranted('API_VIEW', $subject)) {
+                    throw new AccessDeniedException("Access denied for API_VIEW on: " . get_class($subject));
+                }
             }
-        }
 
-        if (Request::METHOD_PUT === $method) {
-            if (false === $this->authorizationChecker->isGranted('API_EDIT', $subject)) {
-                throw new AccessDeniedException("Access denied for API_EDIT on: " . get_class($subject));
+            if (Request::METHOD_PUT === $method) {
+                if (false === $this->authorizationChecker->isGranted('API_EDIT', $subject)) {
+                    throw new AccessDeniedException("Access denied for API_EDIT on: " . get_class($subject));
+                }
             }
-        }
 
-        if (Request::METHOD_POST === $method) {
-            if (false === $this->authorizationChecker->isGranted('API_CREATE', $subject)) {
-                throw new AccessDeniedException("Access denied for API_CREATE on: " . get_class($subject));
+            if (Request::METHOD_POST === $method) {
+                if (false === $this->authorizationChecker->isGranted('API_CREATE', $subject)) {
+                    throw new AccessDeniedException("Access denied for API_CREATE on: " . get_class($subject));
+                }
             }
-        }
 
-        if (Request::METHOD_DELETE === $method) {
-            if (false === $this->authorizationChecker->isGranted('API_DELETE', $subject)) {
-                throw new AccessDeniedException("Access denied for API_DELETE on: " . get_class($subject));
+            if (Request::METHOD_DELETE === $method) {
+                if (false === $this->authorizationChecker->isGranted('API_DELETE', $subject)) {
+                    throw new AccessDeniedException("Access denied for API_DELETE on: " . get_class($subject));
+                }
             }
         }
 

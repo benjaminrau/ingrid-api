@@ -22,3 +22,4 @@ parameters:
 
     api_name: 'Ingrid API'
     api_description: 'Ingrid provides allergen information for products.'
+    api_public_path: public

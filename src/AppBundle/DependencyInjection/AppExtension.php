@@ -16,5 +16,10 @@ class AppExtension extends Extension
 	{
 		$loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 		$loader->load('services.yml');
+
+        $configuration = new Configuration();
+        $processedConfiguration = $this->processConfiguration($configuration, $configs);
+        $container->setParameter('app.registration_secrets',$processedConfiguration['registration_secrets']);
+        $container->setParameter('app.api_public_path',$processedConfiguration['api_public_path']);
 	}
 }
