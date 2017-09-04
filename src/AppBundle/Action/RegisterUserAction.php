@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -55,7 +54,7 @@ class RegisterUserAction
         }
 
         if ($this->entityManager->getRepository(User::class)->findBy(["username" => $data->getUsername()])) {
-            throw new AccessDeniedException('Username is already taken!');
+            throw new AccessDeniedHttpException('Username is already taken!');
         }
 
         $data->setRolesByRegistrationSecret($userRegistrationSecret);
