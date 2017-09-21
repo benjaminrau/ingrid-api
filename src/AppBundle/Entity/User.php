@@ -262,9 +262,11 @@ class User implements UserInterface
 
     public function isUserActionQuotaExceeded(Request $request)
     {
-        $userActionQuotaDateFrom = $this->getUserActionQuotaDateInterval() ?
-            (new \DateTime())->modify('-' . $this->getUserActionQuotaDateInterval()) :
-            (new \DateTime());
+        if (!$this->getUserActionQuotaDateInterval() || 0 === $this->getUserActionQuota()) {
+            return true;
+        }
+
+        $userActionQuotaDateFrom = (new \DateTime())->modify('-' . $this->getUserActionQuotaDateInterval());
 
         if ($this->getUserActionQuota() <= $this->getPerformedUserActions()->filter(
             function (UserAction $userAction) use ($request, $userActionQuotaDateFrom) {
