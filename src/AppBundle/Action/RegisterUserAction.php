@@ -57,7 +57,7 @@ class RegisterUserAction
             throw new AccessDeniedHttpException('Username is already taken!');
         }
 
-        $data->setRolesByRegistrationSecret($userRegistrationSecret);
+        $data->setPropertiesByRegistrationSecret($userRegistrationSecret);
 
         return $data;
     }

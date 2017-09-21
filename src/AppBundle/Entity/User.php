@@ -2,7 +2,10 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Ma27\ApiKeyAuthenticationBundle\Annotation as Auth;
@@ -92,6 +95,34 @@ class User implements UserInterface
     private $registrationSecret;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=128, nullable=false)
+     * @Groups({"api_out_default"})
+     */
+    private $userActionQuotaDateInterval = '1 day';
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", length=128, nullable=false)
+     * @Groups({"api_out_default"})
+     */
+    private $userActionQuota = 0;
+
+    /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserAction", mappedBy="performingUser")
+     */
+    private $performedUserActions;
+
+    public function __construct()
+    {
+        $this->performedUserActions = new ArrayCollection();
+    }
+
+    /**
      * @return string
      */
     public function getId()
@@ -148,6 +179,22 @@ class User implements UserInterface
         }
     }
 
+    public function setPropertiesByRegistrationSecret($registrationSecret)
+    {
+        $this->setUserActionQuotaByRegistrationSecret($registrationSecret);
+        $this->setRolesByRegistrationSecret($registrationSecret);
+    }
+
+    public function setUserActionQuotaByRegistrationSecret($registrationSecret)
+    {
+        if (!empty($registrationSecret["userActionQuota"])) {
+            $this->userActionQuota = $registrationSecret["userActionQuota"];
+        }
+        if (!empty($registrationSecret["userActionQuotaDateInterval"])) {
+            $this->userActionQuotaDateInterval = $registrationSecret["userActionQuotaDateInterval"];
+        }
+    }
+
     public function setRolesByRegistrationSecret($registrationSecret)
     {
         $this->roles = [];
@@ -177,5 +224,55 @@ class User implements UserInterface
     public function setRegistrationSecret(string $registrationSecret)
     {
         $this->registrationSecret = $registrationSecret;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getPerformedUserActions()
+    {
+        return $this->performedUserActions;
+    }
+
+    /**
+     * @param Collection $performedUserActions
+     */
+    public function setPerformedUserActions($performedUserActions)
+    {
+        $this->performedUserActions = $performedUserActions;
+    }
+
+    public function addPerformedUserAction(UserAction $userAction)
+    {
+        $this->performedUserActions->add($userAction);
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserActionQuotaDateInterval()
+    {
+        return $this->userActionQuotaDateInterval;
+    }
+
+    public function getUserActionQuota()
+    {
+        return $this->userActionQuota;
+    }
+
+    public function isUserActionQuotaExceeded(Request $request)
+    {
+        $userActionQuotaDateFrom = $this->getUserActionQuotaDateInterval() ?
+            (new \DateTime())->modify('-' . $this->getUserActionQuotaDateInterval()) :
+            (new \DateTime());
+
+        if ($this->getUserActionQuota() <= $this->getPerformedUserActions()->filter(
+            function (UserAction $userAction) use ($request, $userActionQuotaDateFrom) {
+                return $userAction->getActionDate() >= $userActionQuotaDateFrom;
+            })->count()) {
+            return true;
+        }
+
+        return false;
     }
 }

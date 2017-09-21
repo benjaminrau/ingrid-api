@@ -101,5 +101,5 @@ ma27_api_key_authentication:
 app:
     api_public_path: "%api_public_path%"
     registration_secrets:
-        - { secret: "eabe945c-d317-4fdf-80cb-c287c0dc5af8", roles: ["ROLE_INGRID_APPUSER", "ROLE_INGRID_API"] }
-        - { secret: "d8c0a51b-4de2-4e57-bc46-a283145421f8", roles: ["ROLE_INGRID_AGENCY", "ROLE_INGRID_API"] }
+        - { secret: "eabe945c-d317-4fdf-80cb-c287c0dc5af8", roles: ["ROLE_INGRID_APPUSER", "ROLE_INGRID_API"], userActionQuotaDateInterval: "1 day", userActionQuota: 5 }
+        - { secret: "d8c0a51b-4de2-4e57-bc46-a283145421f8", roles: ["ROLE_INGRID_AGENCY", "ROLE_INGRID_API"], userActionQuotaDateInterval: "1 month", userActionQuota: 1000 }
